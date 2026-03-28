@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Smart Traffic Predictor</title>
     <link rel="stylesheet" href="/static/styles.css" />
 </head>
+
 <body>
     <div class="hero">
         <div class="hero-overlay"></div>
@@ -26,11 +28,13 @@
                 <form method="POST" class="route-form">
                     <div class="input-row">
                         <label for="source">Source</label>
-                        <input id="source" name="source" type="text" placeholder="Enter source (e.g., Chennai)" autocomplete="on" />
+                        <input id="source" name="source" type="text" placeholder="Enter source (e.g., Chennai)"
+                            autocomplete="on" />
                     </div>
                     <div class="input-row">
                         <label for="destination">Destination</label>
-                        <input id="destination" name="destination" type="text" placeholder="Enter destination (e.g., Kanchipuram)" autocomplete="on" />
+                        <input id="destination" name="destination" type="text"
+                            placeholder="Enter destination (e.g., Kanchipuram)" autocomplete="on" />
                     </div>
                     <div class="input-row">
                         <label for="time">Time</label>
@@ -66,7 +70,7 @@
                 </form>
             </div>
             {% if error %}
-                <div class="message error">{{ error }}</div>
+            <div class="message error">{{ error }}</div>
             {% endif %}
         </div>
 
@@ -79,29 +83,31 @@
             <h2>Route Suggestions</h2>
             <div class="route-cards" id="routeCards">
                 {% if route_data %}
-                    <div class="route-card recommended glass-card">
-                        <div class="route-meta"><span class="badge recommended-badge">Recommended</span></div>
-                        <p class="route-path">{{ route_data.path | join(' → ') if route_data.path else 'No path found' }}</p>
-                        <p><span class="icon">🛣️</span>{{ route_data.travel_time }} mins</p>
-                        <p><span class="icon">⚡</span><span class="status {{ route_data.traffic_level.lower() }}">{{ route_data.traffic_level }} traffic</span></p>
-                    </div>
+                <div class="route-card recommended glass-card">
+                    <div class="route-meta"><span class="badge recommended-badge">Recommended</span></div>
+                    <p class="route-path">{{ route_data.path | join(' → ') if route_data.path else 'No path found' }}
+                    </p>
+                    <p><span class="icon">🛣️</span>{{ route_data.travel_time }} mins</p>
+                    <p><span class="icon">⚡</span><span class="status {{ route_data.traffic_level.lower() }}">{{
+                            route_data.traffic_level }} traffic</span></p>
+                </div>
                 {% else %}
-                    <div class="route-card recommended glass-card">
-                        <div class="route-meta"><span class="badge recommended-badge">Recommended</span></div>
-                        <p class="route-path">Chennai → Kanchipuram</p>
-                        <p><span class="icon">🛣️</span>45 mins</p>
-                        <p><span class="icon">⚡</span><span class="status low">Low traffic</span></p>
-                    </div>
-                    <div class="route-card glass-card">
-                        <p class="route-path">Chennai → Tiruvallur</p>
-                        <p><span class="icon">🛣️</span>30 mins</p>
-                        <p><span class="icon">⚡</span><span class="status medium">Medium traffic</span></p>
-                    </div>
-                    <div class="route-card glass-card">
-                        <p class="route-path">Chennai → Chengalpattu</p>
-                        <p><span class="icon">🛣️</span>50 mins</p>
-                        <p><span class="icon">⚡</span><span class="status high">High traffic</span></p>
-                    </div>
+                <div class="route-card recommended glass-card">
+                    <div class="route-meta"><span class="badge recommended-badge">Recommended</span></div>
+                    <p class="route-path">Chennai → Kanchipuram</p>
+                    <p><span class="icon">🛣️</span>45 mins</p>
+                    <p><span class="icon">⚡</span><span class="status low">Low traffic</span></p>
+                </div>
+                <div class="route-card glass-card">
+                    <p class="route-path">Chennai → Tiruvallur</p>
+                    <p><span class="icon">🛣️</span>30 mins</p>
+                    <p><span class="icon">⚡</span><span class="status medium">Medium traffic</span></p>
+                </div>
+                <div class="route-card glass-card">
+                    <p class="route-path">Chennai → Chengalpattu</p>
+                    <p><span class="icon">🛣️</span>50 mins</p>
+                    <p><span class="icon">⚡</span><span class="status high">High traffic</span></p>
+                </div>
                 {% endif %}
             </div>
         </section>
@@ -116,27 +122,31 @@
             <div class="results-grid">
                 <div class="summary-card glass-card">
                     <h3>Selected route</h3>
-                    <p id="selectedRoute">{{ route_data.path | join(' → ') if route_data and route_data.path else 'No route selected' }}</p>
+                    <p id="selectedRoute">{{ route_data.path | join(' → ') if route_data and route_data.path else 'No
+                        route selected' }}</p>
                 </div>
                 <div class="summary-card glass-card">
                     <h3>Total Time</h3>
-                    <p id="totalTime">{{ route_data.travel_time if route_data and route_data.travel_time else 'N/A' }} mins</p>
+                    <p id="totalTime">{{ route_data.travel_time if route_data and route_data.travel_time else 'N/A' }}
+                        mins</p>
                 </div>
                 <div class="summary-card glass-card">
                     <h3>Traffic Condition</h3>
-                    <p id="trafficCondition"><span class="status {{ route_data.traffic_level.lower() if route_data else 'unknown' }}">{{ route_data.traffic_level if route_data else 'Unknown' }}</span></p>
+                    <p id="trafficCondition"><span
+                            class="status {{ route_data.traffic_level.lower() if route_data else 'unknown' }}">{{
+                            route_data.traffic_level if route_data else 'Unknown' }}</span></p>
                 </div>
             </div>
 
             <div class="map-card glass-card" style="padding: 0; overflow: hidden; height: 350px;">
                 {% if route_data and route_data.source and route_data.destination %}
-                <iframe width="100%" height="100%" frameborder="0" style="border:0;" 
-                        src="https://maps.google.com/maps?q={{ route_data.source }}%20to%20{{ route_data.destination }}&t=&z=10&ie=UTF8&iwloc=&output=embed" 
-                        allowfullscreen></iframe>
+                <iframe width="100%" height="100%" frameborder="0" style="border:0;"
+                    src="https://maps.google.com/maps?q={{ route_data.source }}%20to%20{{ route_data.destination }}&t=&z=10&ie=UTF8&iwloc=&output=embed"
+                    allowfullscreen></iframe>
                 {% else %}
-                <iframe width="100%" height="100%" frameborder="0" style="border:0;" 
-                        src="https://maps.google.com/maps?q=Chennai&t=&z=10&ie=UTF8&iwloc=&output=embed" 
-                        allowfullscreen></iframe>
+                <iframe width="100%" height="100%" frameborder="0" style="border:0;"
+                    src="https://maps.google.com/maps?q=Chennai&t=&z=10&ie=UTF8&iwloc=&output=embed"
+                    allowfullscreen></iframe>
                 {% endif %}
             </div>
 
@@ -144,11 +154,13 @@
                 <h3>Route Breakdown</h3>
                 <ul>
                     {% if route_data and route_data.path %}
-                        {% for i in range(route_data.path|length - 1) %}
-                            <li><span class="step-icon">📍</span> {{ route_data.path[i] }} → {{ route_data.path[i+1] }} <strong>{{ 'Estimated' }} mins</strong></li>
-                        {% endfor %}
+                    {% for i in range(route_data.path|length - 1) %}
+                    <li><span class="step-icon">📍</span> {{ route_data.path[i] }} → {{ route_data.path[i+1] }}
+                        <strong>{{ 'Estimated' }} mins</strong>
+                    </li>
+                    {% endfor %}
                     {% else %}
-                        <li><span class="step-icon">📍</span> No route breakdown available</li>
+                    <li><span class="step-icon">📍</span> No route breakdown available</li>
                     {% endif %}
                 </ul>
             </div>
@@ -157,9 +169,134 @@
 
         <section id="faq" class="section footer-section">
             <h2>About</h2>
-            <p>Smart Traffic Density Prediction System with route optimization. Powered by simple AI heuristics and updated graph logic.</p>
-            <footer>
-                <p>&copy; 2026 SmartTraffic. Built with Flask + custom UI.</p>
+            <p>Smart Traffic Density Prediction System with route optimization. Powered by simple AI heuristics and
+                updated graph logic.</p>
+            <style>
+                .glass-footer {
+                    margin-top: 40px;
+                    padding: 30px;
+                    border-radius: 15px;
+                    background: rgba(255, 255, 255, 0.05);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    text-align: center;
+                    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                }
+
+                .creator-card {
+                    flex: 1;
+                    min-width: 260px;
+                    background: rgba(255, 255, 255, 0.02);
+                    padding: 25px 20px;
+                    border-radius: 12px;
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    transition: all 0.3s ease;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .creator-card::before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 3px;
+                    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                }
+
+                .creator-card:hover {
+                    transform: translateY(-5px);
+                    background: rgba(255, 255, 255, 0.08);
+                    border-color: rgba(79, 172, 254, 0.3);
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+                }
+
+                .creator-card:hover::before {
+                    opacity: 1;
+                }
+
+                .creator-name {
+                    display: block;
+                    font-size: 1.4em;
+                    font-weight: 600;
+                    color: #fff;
+                    margin-bottom: 8px;
+                    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+
+                .creator-detail {
+                    display: inline-block;
+                    font-size: 0.9em;
+                    color: #ccc;
+                    margin-bottom: 12px;
+                    font-family: monospace;
+                    background: rgba(255, 255, 255, 0.06);
+                    padding: 5px 10px;
+                    border-radius: 6px;
+                    letter-spacing: 1px;
+                }
+
+                .creator-badge {
+                    display: block;
+                    font-size: 0.8em;
+                    background: rgba(79, 172, 254, 0.15);
+                    color: #4facfe;
+                    padding: 6px 12px;
+                    border-radius: 20px;
+                    margin: 0 auto 10px auto;
+                    border: 1px solid rgba(79, 172, 254, 0.3);
+                    width: fit-content;
+                    font-weight: 500;
+                    letter-spacing: 1px;
+                }
+
+                .creator-college {
+                    display: block;
+                    font-size: 0.85em;
+                    color: #999;
+                }
+
+                .creator-icon {
+                    font-size: 2rem;
+                    margin-bottom: 15px;
+                    display: inline-block;
+                    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+                }
+            </style>
+            <footer class="glass-footer">
+                <h3
+                    style="margin-bottom: 30px; font-size: 1.8em; color: #fff; letter-spacing: 1.5px; font-weight: 600;">
+                    Meet the Creators</h3>
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 25px;">
+                    <div class="creator-card">
+                        <span class="creator-icon">👨‍💻</span>
+                        <span class="creator-name">Dinesh S</span>
+                        <span class="creator-detail">717824P215</span>
+                        <span class="creator-badge">CSE-B • 2nd Year</span>
+                        <span class="creator-college">Karpagam College of Engineering</span>
+                    </div>
+                    <div class="creator-card">
+                        <span class="creator-icon">👨‍💻</span>
+                        <span class="creator-name">Karthikeyan R</span>
+                        <span class="creator-detail">717824P225</span>
+                        <span class="creator-badge">CSE-B • 2nd Year</span>
+                        <span class="creator-college">Karpagam College of Engineering</span>
+                    </div>
+                    <div class="creator-card">
+                        <span class="creator-icon">👨‍💻</span>
+                        <span class="creator-name">Sanjaikrishna S</span>
+                        <span class="creator-detail">717824P247</span>
+                        <span class="creator-badge">CSE-B • 2nd Year</span>
+                        <span class="creator-college">Karpagam College of Engineering</span>
+                    </div>
+                </div>
             </footer>
         </section>
     </main>
@@ -177,74 +314,75 @@
     </aside>
 
     <script>
-      const toggle = document.getElementById('chatbotToggle');
-      const panel = document.getElementById('chatPanel');
-      const closeBtn = document.getElementById('chatClose');
-      const chatBody = document.getElementById('chatBody');
+        const toggle = document.getElementById('chatbotToggle');
+        const panel = document.getElementById('chatPanel');
+        const closeBtn = document.getElementById('chatClose');
+        const chatBody = document.getElementById('chatBody');
 
-      // Define 10 FAQ/Doubt queries
-      const queries = [
-          { q: "1. How do I find the best route?", a: "Use the form on the main page! Enter your source, destination, and time to get the optimized path." },
-          { q: "2. How is traffic density predicted?", a: "We analyze historical patterns and hourly heuristics to classify traffic as Low, Medium, or High." },
-          { q: "3. What algorithm is used for routing?", a: "We use Dijkstra's Algorithm on our graph network to find the shortest path factoring in traffic delays." },
-          { q: "4. Where does the dataset come from?", a: "Our dataset includes major routes and base times across Tamil Nadu, simulating historical conditions." },
-          { q: "5. Can I view all available routes?", a: "Yes! Click the 'Database' link in the top navigation bar to see our complete structured data table." },
-          { q: "6. Does this support live, real-time traffic?", a: "Our model currently predicts traffic using historical heuristics for different rush hours rather than live sensors." },
-          { q: "7. What happens if my city isn't listed?", a: "If your city isn't connected in our background graph dataset, the system won't find a path. Please check the Database for supported cities." },
-          { q: "8. Why does the map visual differ slightly from the results?", a: "The embedded map gives you geographic context of the trip, while our AI strictly calculates routes based on our custom node graph." },
-          { q: "9. How does the 'Time' dropdown affect my trip?", a: "Traveling during peak hours applies a high-traffic time penalty to your trip. Selecting 'Now' uses the current typical traffic." },
-          { q: "10. What technology powers this app?", a: "This project uses a Python/Flask backend, AI heuristics, and a reactive custom HTML/JS frontend!" }
-      ];
+        // Define 10 FAQ/Doubt queries
+        const queries = [
+            { q: "1. How do I find the best route?", a: "Use the form on the main page! Enter your source, destination, and time to get the optimized path." },
+            { q: "2. How is traffic density predicted?", a: "We analyze historical patterns and hourly heuristics to classify traffic as Low, Medium, or High." },
+            { q: "3. What algorithm is used for routing?", a: "We use Dijkstra's Algorithm on our graph network to find the shortest path factoring in traffic delays." },
+            { q: "4. Where does the dataset come from?", a: "Our dataset includes major routes and base times across Tamil Nadu, simulating historical conditions." },
+            { q: "5. Can I view all available routes?", a: "Yes! Click the 'Database' link in the top navigation bar to see our complete structured data table." },
+            { q: "6. Does this support live, real-time traffic?", a: "Our model currently predicts traffic using historical heuristics for different rush hours rather than live sensors." },
+            { q: "7. What happens if my city isn't listed?", a: "If your city isn't connected in our background graph dataset, the system won't find a path. Please check the Database for supported cities." },
+            { q: "8. Why does the map visual differ slightly from the results?", a: "The embedded map gives you geographic context of the trip, while our AI strictly calculates routes based on our custom node graph." },
+            { q: "9. How does the 'Time' dropdown affect my trip?", a: "Traveling during peak hours applies a high-traffic time penalty to your trip. Selecting 'Now' uses the current typical traffic." },
+            { q: "10. What technology powers this app?", a: "This project uses a Python/Flask backend, AI heuristics, and a reactive custom HTML/JS frontend!" }
+        ];
 
-      let menuRendered = false;
+        let menuRendered = false;
 
-      toggle.addEventListener('click', () => {
-          panel.classList.toggle('hidden');
-          if (!panel.classList.contains('hidden') && !menuRendered) {
-              menuRendered = true;
-              appendMessage("Hello! I am the Smart Traffic Assistant. What would you like to ask?", 'bot');
-              setTimeout(renderMenu, 800);
-          }
-      });
-      
-      closeBtn.addEventListener('click', () => panel.classList.add('hidden'));
+        toggle.addEventListener('click', () => {
+            panel.classList.toggle('hidden');
+            if (!panel.classList.contains('hidden') && !menuRendered) {
+                menuRendered = true;
+                appendMessage("Hello! I am the Smart Traffic Assistant. What would you like to ask?", 'bot');
+                setTimeout(renderMenu, 800);
+            }
+        });
 
-      function appendMessage(text, role='user') {
-        const el = document.createElement('div');
-        el.className = role === 'user' ? 'user-message' : 'bot-message';
-        el.textContent = text;
-        chatBody.appendChild(el);
-        chatBody.scrollTop = chatBody.scrollHeight;
-      }
+        closeBtn.addEventListener('click', () => panel.classList.add('hidden'));
 
-      function renderMenu() {
-          const optDiv = document.createElement('div');
-          optDiv.style.display = 'flex';
-          optDiv.style.flexDirection = 'column';
-          optDiv.style.gap = '8px';
-          optDiv.style.margin = '10px 0';
-          
-          queries.forEach((item, index) => {
-              const btn = document.createElement('button');
-              btn.className = 'secondary-btn';
-              btn.style.width = '100%';
-              btn.style.textAlign = 'left';
-              btn.style.padding = '8px';
-              btn.style.fontSize = '0.85rem';
-              btn.textContent = item.q;
-              btn.onclick = () => handleQuery(item.q, item.a);
-              optDiv.appendChild(btn);
-          });
-          chatBody.appendChild(optDiv);
-          chatBody.scrollTop = chatBody.scrollHeight;
-      }
+        function appendMessage(text, role = 'user') {
+            const el = document.createElement('div');
+            el.className = role === 'user' ? 'user-message' : 'bot-message';
+            el.textContent = text;
+            chatBody.appendChild(el);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
 
-      function handleQuery(questionText, answerText) {
-          appendMessage(questionText, 'user');
-          setTimeout(() => {
-              appendMessage(answerText, 'bot');
-          }, 600);
-      }
+        function renderMenu() {
+            const optDiv = document.createElement('div');
+            optDiv.style.display = 'flex';
+            optDiv.style.flexDirection = 'column';
+            optDiv.style.gap = '8px';
+            optDiv.style.margin = '10px 0';
+
+            queries.forEach((item, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'secondary-btn';
+                btn.style.width = '100%';
+                btn.style.textAlign = 'left';
+                btn.style.padding = '8px';
+                btn.style.fontSize = '0.85rem';
+                btn.textContent = item.q;
+                btn.onclick = () => handleQuery(item.q, item.a);
+                optDiv.appendChild(btn);
+            });
+            chatBody.appendChild(optDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function handleQuery(questionText, answerText) {
+            appendMessage(questionText, 'user');
+            setTimeout(() => {
+                appendMessage(answerText, 'bot');
+            }, 600);
+        }
     </script>
 </body>
+
 </html>

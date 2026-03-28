@@ -1,0 +1,11 @@
+component,filename,description
+Web App Entry,app.py,Flask routes, form handling, route/traffic logic integration
+Chatbot Parser,chatbot.py,Interprets user text for route and traffic queries
+Traffic Model,traffic_predictor.py,Simple hour-based congestion predictor
+Graph Builder,road_graph.py,Constructs road graph and dynamic edge weights
+Routing Logic,routing.py,Dijkstra shortest path algorithm
+Response Formatter,response.py,Formats route and traffic messages for UI
+UI Template,templates/index.html,HTML form and results display
+Styles,static/styles.css,Visual design for web interface
+Documentation,README.md,Setup and usage instructions
+Requirements,requirements.txt,Python dependencies

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Traffic Predictor</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+    <div class="hero">
+        <div class="hero-overlay"></div>
+        <header class="hero-header">
+            <div class="brand">SmartTraffic</div>
+            <nav>
+                <a href="#routes">Routes</a>
+                <a href="#results">Results</a>
+                <a href="/database">Database</a>
+                <a href="#faq">About</a>
+            </nav>
+        </header>
+
+        <div class="hero-content">
+            <h1>Smart Traffic Predictor & Route Optimizer</h1>
+            <p>Predict traffic. Find the fastest route. Travel smarter.</p>
+            <div class="input-card glass-card">
+                <form method="POST" class="route-form">
+                    <div class="input-row">
+                        <label for="source">Source</label>
+                        <input id="source" name="source" type="text" placeholder="Enter source (e.g., Chennai)" autocomplete="on" />
+                    </div>
+                    <div class="input-row">
+                        <label for="destination">Destination</label>
+                        <input id="destination" name="destination" type="text" placeholder="Enter destination (e.g., Kanchipuram)" autocomplete="on" />
+                    </div>
+                    <div class="input-row">
+                        <label for="time">Time</label>
+                        <select id="time" name="time">
+                            <option value="now">Now</option>
+                            <option value="12am">12:00 AM</option>
+                            <option value="1am">1:00 AM</option>
+                            <option value="2am">2:00 AM</option>
+                            <option value="3am">3:00 AM</option>
+                            <option value="4am">4:00 AM</option>
+                            <option value="5am">5:00 AM</option>
+                            <option value="6am">6:00 AM</option>
+                            <option value="7am">7:00 AM</option>
+                            <option value="8am">8:00 AM</option>
+                            <option value="9am">9:00 AM</option>
+                            <option value="10am">10:00 AM</option>
+                            <option value="11am">11:00 AM</option>
+                            <option value="12pm">12:00 PM</option>
+                            <option value="1pm">1:00 PM</option>
+                            <option value="2pm">2:00 PM</option>
+                            <option value="3pm">3:00 PM</option>
+                            <option value="4pm">4:00 PM</option>
+                            <option value="5pm">5:00 PM</option>
+                            <option value="6pm">6:00 PM</option>
+                            <option value="7pm">7:00 PM</option>
+                            <option value="8pm">8:00 PM</option>
+                            <option value="9pm">9:00 PM</option>
+                            <option value="10pm">10:00 PM</option>
+                            <option value="11pm">11:00 PM</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="primary-btn">Find Best Route</button>
+                </form>
+            </div>
+            {% if error %}
+                <div class="message error">{{ error }}</div>
+            {% endif %}
+        </div>
+
+        <div class="parallax-dot"></div>
+        <div class="parallax-dot second"></div>
+    </div>
+
+    <main class="page-container">
+        <section id="routes" class="section routes-section">
+            <h2>Route Suggestions</h2>
+            <div class="route-cards" id="routeCards">
+                {% if route_data %}
+                    <div class="route-card recommended glass-card">
+                        <div class="route-meta"><span class="badge recommended-badge">Recommended</span></div>
+                        <p class="route-path">{{ route_data.path | join(' → ') if route_data.path else 'No path found' }}</p>
+                        <p><span class="icon">🛣️</span>{{ route_data.travel_time }} mins</p>
+                        <p><span class="icon">⚡</span><span class="status {{ route_data.traffic_level.lower() }}">{{ route_data.traffic_level }} traffic</span></p>
+                    </div>
+                {% else %}
+                    <div class="route-card recommended glass-card">
+                        <div class="route-meta"><span class="badge recommended-badge">Recommended</span></div>
+                        <p class="route-path">Chennai → Kanchipuram</p>
+                        <p><span class="icon">🛣️</span>45 mins</p>
+                        <p><span class="icon">⚡</span><span class="status low">Low traffic</span></p>
+                    </div>
+                    <div class="route-card glass-card">
+                        <p class="route-path">Chennai → Tiruvallur</p>
+                        <p><span class="icon">🛣️</span>30 mins</p>
+                        <p><span class="icon">⚡</span><span class="status medium">Medium traffic</span></p>
+                    </div>
+                    <div class="route-card glass-card">
+                        <p class="route-path">Chennai → Chengalpattu</p>
+                        <p><span class="icon">🛣️</span>50 mins</p>
+                        <p><span class="icon">⚡</span><span class="status high">High traffic</span></p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section id="results" class="section results-section">
+            <h2>Results Summary</h2>
+            {% if response %}
+            <div class="message success" style="margin-bottom: 20px;">
+                <strong>Output:</strong> {{ response }}
+            </div>
+            {% endif %}
+            <div class="results-grid">
+                <div class="summary-card glass-card">
+                    <h3>Selected route</h3>
+                    <p id="selectedRoute">{{ route_data.path | join(' → ') if route_data and route_data.path else 'No route selected' }}</p>
+                </div>
+                <div class="summary-card glass-card">
+                    <h3>Total Time</h3>
+                    <p id="totalTime">{{ route_data.travel_time if route_data and route_data.travel_time else 'N/A' }} mins</p>
+                </div>
+                <div class="summary-card glass-card">
+                    <h3>Traffic Condition</h3>
+                    <p id="trafficCondition"><span class="status {{ route_data.traffic_level.lower() if route_data else 'unknown' }}">{{ route_data.traffic_level if route_data else 'Unknown' }}</span></p>
+                </div>
+            </div>
+
+            <div class="map-card glass-card" style="padding: 0; overflow: hidden; height: 350px;">
+                {% if route_data and route_data.source and route_data.destination %}
+                <iframe width="100%" height="100%" frameborder="0" style="border:0;" 
+                        src="https://maps.google.com/maps?q={{ route_data.source }}%20to%20{{ route_data.destination }}&t=&z=10&ie=UTF8&iwloc=&output=embed" 
+                        allowfullscreen></iframe>
+                {% else %}
+                <iframe width="100%" height="100%" frameborder="0" style="border:0;" 
+                        src="https://maps.google.com/maps?q=Chennai&t=&z=10&ie=UTF8&iwloc=&output=embed" 
+                        allowfullscreen></iframe>
+                {% endif %}
+            </div>
+
+            <div class="breakdown-card glass-card">
+                <h3>Route Breakdown</h3>
+                <ul>
+                    {% if route_data and route_data.path %}
+                        {% for i in range(route_data.path|length - 1) %}
+                            <li><span class="step-icon">📍</span> {{ route_data.path[i] }} → {{ route_data.path[i+1] }} <strong>{{ 'Estimated' }} mins</strong></li>
+                        {% endfor %}
+                    {% else %}
+                        <li><span class="step-icon">📍</span> No route breakdown available</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </section>
+
+
+        <section id="faq" class="section footer-section">
+            <h2>About</h2>
+            <p>Smart Traffic Density Prediction System with route optimization. Powered by simple AI heuristics and updated graph logic.</p>
+            <footer>
+                <p>&copy; 2026 SmartTraffic. Built with Flask + custom UI.</p>
+            </footer>
+        </section>
+    </main>
+
+    <button id="chatbotToggle" class="chatbot-toggle" aria-label="Open chat">💬</button>
+    <aside id="chatPanel" class="chat-panel hidden">
+        <div class="chat-header">
+            <h3>Traffic Quiz Bot</h3>
+            <button id="chatClose" class="close-btn">✕</button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <!-- Messages and questions will be injected here -->
+        </div>
+        <!-- Removed text input row to enforce MCQ choices -->
+    </aside>
+
+    <script>
+      const toggle = document.getElementById('chatbotToggle');
+      const panel = document.getElementById('chatPanel');
+      const closeBtn = document.getElementById('chatClose');
+      const chatBody = document.getElementById('chatBody');
+
+      // Define 10 FAQ/Doubt queries
+      const queries = [
+          { q: "1. How do I find the best route?", a: "Use the form on the main page! Enter your source, destination, and time to get the optimized path." },
+          { q: "2. How is traffic density predicted?", a: "We analyze historical patterns and hourly heuristics to classify traffic as Low, Medium, or High." },
+          { q: "3. What algorithm is used for routing?", a: "We use Dijkstra's Algorithm on our graph network to find the shortest path factoring in traffic delays." },
+          { q: "4. Where does the dataset come from?", a: "Our dataset includes major routes and base times across Tamil Nadu, simulating historical conditions." },
+          { q: "5. Can I view all available routes?", a: "Yes! Click the 'Database' link in the top navigation bar to see our complete structured data table." },
+          { q: "6. Does this support live, real-time traffic?", a: "Our model currently predicts traffic using historical heuristics for different rush hours rather than live sensors." },
+          { q: "7. What happens if my city isn't listed?", a: "If your city isn't connected in our background graph dataset, the system won't find a path. Please check the Database for supported cities." },
+          { q: "8. Why does the map visual differ slightly from the results?", a: "The embedded map gives you geographic context of the trip, while our AI strictly calculates routes based on our custom node graph." },
+          { q: "9. How does the 'Time' dropdown affect my trip?", a: "Traveling during peak hours applies a high-traffic time penalty to your trip. Selecting 'Now' uses the current typical traffic." },
+          { q: "10. What technology powers this app?", a: "This project uses a Python/Flask backend, AI heuristics, and a reactive custom HTML/JS frontend!" }
+      ];
+
+      let menuRendered = false;
+
+      toggle.addEventListener('click', () => {
+          panel.classList.toggle('hidden');
+          if (!panel.classList.contains('hidden') && !menuRendered) {
+              menuRendered = true;
+              appendMessage("Hello! I am the Smart Traffic Assistant. What would you like to ask?", 'bot');
+              setTimeout(renderMenu, 800);
+          }
+      });
+      
+      closeBtn.addEventListener('click', () => panel.classList.add('hidden'));
+
+      function appendMessage(text, role='user') {
+        const el = document.createElement('div');
+        el.className = role === 'user' ? 'user-message' : 'bot-message';
+        el.textContent = text;
+        chatBody.appendChild(el);
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }
+
+      function renderMenu() {
+          const optDiv = document.createElement('div');
+          optDiv.style.display = 'flex';
+          optDiv.style.flexDirection = 'column';
+          optDiv.style.gap = '8px';
+          optDiv.style.margin = '10px 0';
+          
+          queries.forEach((item, index) => {
+              const btn = document.createElement('button');
+              btn.className = 'secondary-btn';
+              btn.style.width = '100%';
+              btn.style.textAlign = 'left';
+              btn.style.padding = '8px';
+              btn.style.fontSize = '0.85rem';
+              btn.textContent = item.q;
+              btn.onclick = () => handleQuery(item.q, item.a);
+              optDiv.appendChild(btn);
+          });
+          chatBody.appendChild(optDiv);
+          chatBody.scrollTop = chatBody.scrollHeight;
+      }
+
+      function handleQuery(questionText, answerText) {
+          appendMessage(questionText, 'user');
+          setTimeout(() => {
+              appendMessage(answerText, 'bot');
+          }, 600);
+      }
+    </script>
+</body>
+</html>
